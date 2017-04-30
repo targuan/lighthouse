@@ -1,0 +1,9 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Inventories</div>
+    
+    <div class="list-group">
+    {% for inventory in inventories %}
+        <a href="{% url "projects:inventories:inventory_detail" project rev inventory %}" class="list-group-item">{{ inventory }}</a>
+    {% endfor %}
+    </div>
+</div>

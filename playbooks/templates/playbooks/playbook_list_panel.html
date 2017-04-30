@@ -1,0 +1,8 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Playbooks</div>
+    <div class="list-group">
+    {% for playbook in playbooks %}
+        <a href="{% url "projects:playbooks:playbook_detail" project rev playbook %}" class="list-group-item">{{ playbook }}</a>
+    {% endfor %}
+    </div>
+</div>

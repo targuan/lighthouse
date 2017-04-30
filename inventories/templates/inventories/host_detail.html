@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block navbar-right %}
+{{ block.super }}
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ rev }}<span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        <li class="dropdown-header">Tags</li>
+        {% for tag in tags %}
+        <li{% if tag == rev %} class="active"{% endif %}><a href="{% url "projects:inventories:host_detail" project tag inventory host.name %}">{{ tag }}</a></li>
+        {% endfor %}
+        <li class="dropdown-header">Branches</li>
+        {% for branch in branches %}
+        <li{% if branch == rev %} class="active"{% endif %}><a href="{% url "projects:inventories:host_detail" project branch inventory host.name %}">{{ branch }}</a></li>
+        {% endfor %}
+    </ul>
+</li>
+{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li><a href="{% url "projects:project_list" %}">Projects</a></li>
+    <li><a href="{% url "projects:project_detail" project rev %}">{{ project }}</a></li>
+    <li><a href="{% url "projects:inventories:inventory_list" project rev %}">Inventories</a></li>
+    <li><a href="{% url "projects:inventories:inventory_detail" project rev inventory %}">{{ inventory }}</a></li>
+    <li><a href="{% url "projects:inventories:host_list" project rev inventory %}">Hosts</a></li>
+    <li>{{ host.name }}</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">Groups</div>
+    <div class="list-group">
+    {% for group in host.groups %}
+        <a href="{% url "projects:inventories:group_detail" project rev inventory group.name %}" class="list-group-item">{{ group.name }}</a>
+    {% endfor %}
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Variables</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">From self</div>
+        <pre class="editor" id="host_editor" data-ro="true">{{ host.variables }}</pre>
+    </div>
+    {% for group in groups %}
+    {% if group.variables %}
+    <div class="panel panel-default">
+        <div class="panel-heading">From {{ group.name }}</div>
+        <pre class="editor" id="group_{{ group.name }}_editor" data-ro="true">{{ group.variables }}</pre>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

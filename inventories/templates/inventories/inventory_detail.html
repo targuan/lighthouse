@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block navbar-right %}
+{{ block.super }}
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ rev }}<span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        <li class="dropdown-header">Tags</li>
+        {% for tag in tags %}
+        <li{% if rev == tag %} class="active"{% endif %}><a href="{% url "projects:inventories:inventory_detail" project tag inventory %}">{{ tag }}</a></li>
+        {% endfor %}
+        <li class="dropdown-header">Branches</li>
+        {% for branch in branches %}
+        <li><a href="{% url "projects:inventories:inventory_detail" project branch inventory %}">{{ branch }}</a></li>
+        {% endfor %}
+    </ul>
+</li>
+{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li><a href="{% url "projects:project_list" %}">Projects</a></li>
+    <li><a href="{% url "projects:project_detail" project rev %}">{{ project }}</a></li>
+    <li><a href="{% url "projects:inventories:inventory_list" project rev %}">Inventories</a></li>
+    <li>{{ inventory }}</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading"><a href="{% url "projects:inventories:group_list" project rev inventory %}">Groups</a></div>
+    <div class="list-group">
+    {% for group in groups %}
+        <a href="{% url "projects:inventories:group_detail" project rev inventory group.name%}" class="list-group-item">{{ group.name }}<span class="badge">{{ group.hosts|length }} hosts</span></a>
+    {% endfor %}
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading"><a href="{% url "projects:inventories:host_list" project rev inventory %}">Hosts</a></div>
+    <div class="list-group">
+    {% for host in hosts %}
+        <a href="{% url "projects:inventories:host_detail" project rev inventory host.name %}" class="list-group-item">{{ host.name }}<span class="badge">{{ host.groups|length }} groups</span></a>
+    {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

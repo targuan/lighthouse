@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block navbar-right %}
+{{ block.super }}
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ rev }}<span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        <li class="dropdown-header">Tags</li>
+        {% for tag in tags %}
+        <li{% if tag == rev %} class="active"{% endif %}><a href="{% url "projects:inventories:host_list" project tag inventory %}">{{ tag }}</a></li>
+        {% endfor %}
+        <li class="dropdown-header">Branches</li>
+        {% for branch in branches %}
+        <li{% if branch == rev %} class="active"{% endif %}><a href="{% url "projects:inventories:host_list" project branch inventory %}">{{ branch }}</a></li>
+        {% endfor %}
+    </ul>
+</li>
+{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li><a href="{% url "projects:project_list" %}">Projects</a></li>
+    <li><a href="{% url "projects:project_detail" project rev %}">{{ project }}</a></li>
+    <li><a href="{% url "projects:inventories:inventory_list" project rev %}">Inventories</a></li>
+    <li><a href="{% url "projects:inventories:inventory_detail" project rev inventory %}">{{ inventory }}</a></li>
+    <li>Hosts</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+{% for host in hosts %}
+<div class="panel panel-default">
+    <div class="panel-heading"><a href="{% url "projects:inventories:host_detail" project rev inventory host.name %}">{{ host.name }}</a></div>
+    <div class="list-group">
+    {% for group in host.groups %}
+        <a href="{% url "projects:inventories:group_detail" project rev inventory group.name %}" class="list-group-item">{{ group.name }}</a>
+    {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
