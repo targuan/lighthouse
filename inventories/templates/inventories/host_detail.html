@@ -44,7 +44,7 @@
         <div class="panel-heading">From self</div>
         <pre class="editor" id="host_editor" data-ro="true">{{ host.variables }}</pre>
     </div>
-    {% for group in groups %}
+    {% for group in host.groups %}
     {% if group.variables %}
     <div class="panel panel-default">
         <div class="panel-heading">From {{ group.name }}</div>
