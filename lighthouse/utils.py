@@ -2,6 +2,7 @@ import os
 import re
 from git import *
 from git.util import join_path
+from git.repo.base import is_git_dir
 
 from inventories.models import *
 
@@ -19,6 +20,12 @@ def _get_tree(project, rev):
         return repo.tree(rev)
     except:
         raise Exception("Revision {0} not found".format(rev))
+
+def get_projects():
+    projects = [p for p in os.listdir(settings.PROJECTS_PATH)
+                    if is_git_dir(os.path.join(settings.PROJECTS_PATH,p))
+                    or is_git_dir(os.path.join(settings.PROJECTS_PATH,p,'.git'))]
+    return projects
 
 def get_inventories(project, rev):
     tree = _get_tree(project, rev)
@@ -98,7 +105,7 @@ def get_inventory(project, rev, inventory):
         host_vars_tree = inventory_tree['host_vars']
         for host in hosts:
             for ext in ["",".yml",".yaml"]:
-                if "inventories/{0}/host_vars/{1}".format(inventory, host.name) in host_vars_tree:
+                if "inventories/{0}/host_vars/{1}{2}".format(inventory, host.name, ext) in host_vars_tree:
                     host.variables = host_vars_tree[host.name + ext].data_stream.read().decode('utf-8')
                     break
 
