@@ -21,6 +21,13 @@ def _get_tree(project, rev):
     except:
         raise Exception("Revision {0} not found".format(rev))
 
+def resolve_rev(project, rev):
+    repo = _get_repo(project)
+    try:
+        return repo.commit(rev).hexsha
+    except:
+        raise Exception("Revision {0} not found".format(rev))
+
 def get_projects():
     projects = [p for p in os.listdir(settings.PROJECTS_PATH)
                     if is_git_dir(os.path.join(settings.PROJECTS_PATH,p))
