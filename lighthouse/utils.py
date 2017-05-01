@@ -60,7 +60,7 @@ def parse_inventory(content):
             if group not in groups:
                 groups.append(group)
         else:
-            host = Host(line)
+            host = Host(line.split()[0])
             try:
                 i = hosts.index(host)
                 host=hosts[i]

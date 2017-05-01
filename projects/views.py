@@ -8,21 +8,19 @@ from git.repo.base import is_git_dir
 from git.util import join_path
 from git import *
 
-from lighthouse.utils import get_inventories
+from lighthouse.utils import get_inventories, get_projects
 
 
 # Create your views here.
 def project_list(request):
-    projects = [p for p in os.listdir(settings.PROJECTS_PATH)
-                if is_git_dir(os.path.join(settings.PROJECTS_PATH,p))]
+    projects = get_projects()
     projects.sort()
     return render(request, 'projects/project_list.html', {'projects': projects})
 
 
 
 def project_detail(request, project, rev):
-    projects = [p for p in os.listdir(settings.PROJECTS_PATH)
-                if is_git_dir(os.path.join(settings.PROJECTS_PATH,p))]
+    projects = get_projects()
     if not project in projects:
         raise Http404("Project not found")
 
