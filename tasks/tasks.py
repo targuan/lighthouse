@@ -1,15 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
-@shared_task
-def add(x, y):
-    return x + y
+from .models import *
 
-@shared_task
-def mul(x, y):
-    return x * y
-
-@shared_task
-def xsum(numbers):
-    return sum(numbers)
-
+@shared_task(bind=True)
+def run_playbook(self, project, rev, hexsha, playbook, inventory, variables, user, password):
+    task = Task.objects.get(pk=self.request.id)
+    task.result = "result"
+    return ""

@@ -1,3 +1,8 @@
-<form>
-<button>run</button>
-</form>
+<div class="panel panel-default">
+    <div class="panel-heading">Tasks</div>
+    <div class="list-group">
+    {% for task in tasks %}
+        <a href="{% url "projects:tasks:detail" project rev task.task_id %}" class="list-group-item"><h5>{{ task.task_id }}</h5>started</a>
+    {% endfor %}
+    </div>
+</div>
