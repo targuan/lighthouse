@@ -1,5 +1,13 @@
 {% extends "layout.html" %}
 
+{% load static %}
+{% load ansi2html %}
+
+{% block stylesheet %}
+{{ block.super }}
+<link href="{% static "css/ansi2html.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block navbar1 %}
 {{ block.super }}
 <li class="dropdown">
@@ -23,7 +31,16 @@
 <div class="panel panel-default">
     <div class="panel-heading">Task detail</div>
     <div class="panel-body">
-        {{ task.task_id }}
+        <table class="table">
+            <tr><td>Created</td><td>{{ task.created }}</td></tr>
+            <tr><td>Status</td><td>{{ task.status }}</td></tr>
+            <tr><td>Playbook</td><td>{{ task.playbook }}</td></tr>
+            <tr><td>Inventory</td><td>{{ task.inventory }}</td></tr>
+            <tr><td>Username</td><td>{{ task.user }}</td></tr>
+            <tr><td>Options</td><td></td></tr>
+            <tr><td>Variable</td><td><pre class="editor" id="variablesViewer">{{ task.variables }}</pre></td></tr>
+            <tr><td>Result</td><td><pre>{{ task.result|ansi2html|safe }}</pre></td></tr>
+        </table>
     </div>
 </div>
 {% endblock %}

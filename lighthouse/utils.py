@@ -8,21 +8,21 @@ from inventories.models import *
 
 from django.conf import settings
 
-def _get_repo(project):
+def get_repo(project):
     try:
         return Repo(os.path.join(settings.PROJECTS_PATH, project))
     except:
         raise Exception("Project not found")
 
-def _get_tree(project, rev):
-    repo = _get_repo(project)
+def get_tree(project, rev):
+    repo = get_repo(project)
     try:
         return repo.tree(rev)
     except:
         raise Exception("Revision {0} not found".format(rev))
 
 def resolve_rev(project, rev):
-    repo = _get_repo(project)
+    repo = get_repo(project)
     try:
         return repo.commit(rev).hexsha
     except:
@@ -35,7 +35,7 @@ def get_projects():
     return projects
 
 def get_inventories(project, rev):
-    tree = _get_tree(project, rev)
+    tree = get_tree(project, rev)
 
     inventories = []
     try:
@@ -84,7 +84,7 @@ def parse_inventory(content):
     return groups, hosts
 
 def get_inventory(project, rev, inventory):
-    tree = _get_tree(project, rev)
+    tree = get_tree(project, rev)
 
     try:
         inventory_tree = tree["inventories"][inventory]
@@ -119,7 +119,7 @@ def get_inventory(project, rev, inventory):
     return groups, hosts
 
 def get_revision(project):
-    repo = _get_repo(project)
+    repo = get_repo(project)
 
     tags = map(lambda x:x.name, repo.tags)
     branches = map(lambda x:x.name, repo.branches)
@@ -127,7 +127,7 @@ def get_revision(project):
     return tags, branches
 
 def get_playbooks(project, rev):
-    tree = _get_tree(project, rev)
+    tree = get_tree(project, rev)
 
     playbooks = []
     try:
@@ -140,7 +140,7 @@ def get_playbooks(project, rev):
     return playbooks
 
 def get_playbook(project, rev, playbook):
-    tree = _get_tree(project, rev)
+    tree = get_tree(project, rev)
     try:
         playbooks_blob = tree["playbooks/{0}".format(playbook)]
     except:

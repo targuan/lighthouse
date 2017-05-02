@@ -17,7 +17,7 @@ def task_list(request, project, rev):
     playbooks = get_playbooks(project, rev)
     inventories = get_inventories(project, rev)
 
-    return render(request, "tasks/task_list.html", {
+    return render(request, "tasks/list.html", {
         "tasks": tasks,
         "project": project,
         "rev": rev,
@@ -62,12 +62,15 @@ def task_create(request, project, rev):
             yaml.load(variables)
         except:
             raise Http404("Variables are not in yaml format")
-
-        user = ""
-        password = ""
+        
+        options = {}
+        user = request.POST['username']
+        password = request.POST['password']
+        options['check'] = 'check' in request.POST
+        options['limit'] = request.POST['limit']
 
         hexsha = resolve_rev(project, rev)
-        result = run_playbook.delay(project, rev, hexsha, playbook, inventory, variables, user, password)
+        result = run_playbook.delay(project, rev, hexsha, playbook, inventory, variables, user, password, options)
         task = Task(task_id=result.task_id,
                     project=project,
                     rev=rev,
@@ -83,7 +86,7 @@ def task_create(request, project, rev):
     
     tags, branches = get_revision(project)
 
-    return render(request, "tasks/task_create.html", {
+    return render(request, "tasks/create.html", {
         "project": project,
         "rev": rev,
         "tags": tags,
