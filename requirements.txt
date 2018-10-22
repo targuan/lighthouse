@@ -3,7 +3,7 @@ appdirs==1.4.3
 billiard==3.5.0.2
 celery==4.0.2
 dj-database-url==0.4.2
-Django==1.11
+Django~=1.11,>=1.11.15
 gitdb2==2.0.0
 GitPython==2.1.3
 gunicorn==19.7.1
